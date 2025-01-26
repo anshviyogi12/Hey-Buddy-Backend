@@ -1,5 +1,5 @@
-import { renameSync } from "fs";
-import getPrismaInstance from "../utils/PrismaClient.js";
+import { getPrismaInstance } from "../utils/PrismaClient.js";
+import { uploadToFirebase } from "../utils/FirebaseStorage.js";
 
 export const getMessages = async (req, res, next) => {
   try {
@@ -168,15 +168,15 @@ export const getInitialContactsWithMessages = async (req, res, next) => {
 export const addAudioMessage = async (req, res, next) => {
   try {
     if (req.file) {
-      const date = Date.now();
-      let fileName = "uploads/recordings/" + date + req.file.originalname;
-      renameSync(req.file.path, fileName);
-      const prisma = getPrismaInstance();
       const { from, to } = req.query;
       if (from && to) {
+        // Upload to Firebase Storage
+        const fileUrl = await uploadToFirebase(req.file, 'recordings');
+        
+        const prisma = getPrismaInstance();
         const message = await prisma.messages.create({
           data: {
-            message: fileName,
+            message: fileUrl,
             sender: { connect: { id: parseInt(from) } },
             reciever: { connect: { id: parseInt(to) } },
             type: "audio",
@@ -195,15 +195,15 @@ export const addAudioMessage = async (req, res, next) => {
 export const addImageMessage = async (req, res, next) => {
   try {
     if (req.file) {
-      const date = Date.now();
-      let fileName = "uploads/images/" + date + req.file.originalname;
-      renameSync(req.file.path, fileName);
-      const prisma = getPrismaInstance();
       const { from, to } = req.query;
       if (from && to) {
+        // Upload to Firebase Storage
+        const fileUrl = await uploadToFirebase(req.file, 'images');
+        
+        const prisma = getPrismaInstance();
         const message = await prisma.messages.create({
           data: {
-            message: fileName,
+            message: fileUrl,
             sender: { connect: { id: parseInt(from) } },
             reciever: { connect: { id: parseInt(to) } },
             type: "image",
