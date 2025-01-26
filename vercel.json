@@ -11,9 +11,5 @@
     ],
     "routes": [
         { "src": "/(.*)", "dest": "/index.js" }
-    ],
-    "env": {
-        "DATABASE_URL": "@database_url",
-        "PORT": "8000"
-    }
+    ]
 }
