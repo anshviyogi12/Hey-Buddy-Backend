@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import AuthRoutes from "./routes/AuthRoutes.js";
-import MessageRoutes from "./routes/MessageRoutes.js";
+import AuthRoutes from "../routes/AuthRoutes.js";
+import MessageRoutes from "../routes/MessageRoutes.js";
 import { Server } from "socket.io";
 
 dotenv.config();
